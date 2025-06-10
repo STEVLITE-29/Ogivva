@@ -6,7 +6,7 @@ import {
   signup,
   // login,
   // logout,
-  // verifyEmail,
+  verifyEmail,
   // forgotPassword,
   // resetPassword,
   // checkAuth
@@ -16,7 +16,7 @@ import {
 router.post("/signup", signup)
 // router.get("/login", login)
 // router.get("/logout", logout)
-// router.get("/verify-email", verifyEmail)
+router.post("/verify-email", verifyEmail)
 // router.get("/forgot-password", forgotPassword)
 // router.get("/reset-password", resetPassword)
 

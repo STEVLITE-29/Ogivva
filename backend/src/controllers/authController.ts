@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { Request, Response } from "express"
 import User from "../models/User";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookies"
-import { sendVerificationEmail } from "../email/sendEmails";
+import { sendVerificationEmail, welcomeEmail } from "../email/sendEmails";
 
 //signup controller
 export const signup = async (req: Request, res: Response): Promise<void> => {
@@ -51,3 +51,38 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+export const verifyEmail = async (req: Request, res: Response): Promise<void> => {
+  // destructure the verification token from the request body
+  const { code } = req.body;
+  try {
+    // to check if the verification code is provided
+    const user = await User.findOne({
+      verificationToken: code,
+      verificationTokenExpiresAt: {$gt: Date.now()} // if the code has expired
+    })
+    // check if token has expired or does not exist
+    if (!user) {
+      res.status(400).json({ success: "Failed", message: "Invalid or expired verification token" });
+      return;
+    }
+    // updating user by setting is verified to true and clearing the verification token
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save();
+    // sending welcome email after sucessful verification
+    await welcomeEmail(user.name as string, user.email as string)
+
+    res.status(200).json({
+      success: "Success", 
+      message: "Email verified successfully",
+      user: {
+        ...user!.toObject(),
+        password: undefined, // Exclude password from response
+      }
+    });
+  } catch (error) {
+    console.error("Email verification error:", error);
+    res.status(500).json({ message: "Email verification failed" });
+  }
+}
