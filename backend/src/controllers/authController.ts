@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { Request, Response } from "express"
 import User from "../models/User";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookies"
-import { sendVerificationEmail, welcomeEmail } from "../email/sendEmails";
+import { sendVerificationEmail, welcomeEmail, sendResetPasswordEmail } from "../email/sendEmails";
 
 //signup controller
 export const signup = async (req: Request, res: Response): Promise<void> => {
@@ -139,7 +139,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     console.error("Login error:", error);
     res.status(500).json({ message: "Login Failed" });
   }
-}
+};
 
 export const logout = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -156,3 +156,38 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Logout failed" });
   }
 };
+
+export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+  // destructure email from request body
+  const { email } = req.body;
+
+  try {
+    // find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.status(404).json({message: "User not found"});
+      return;
+    }
+
+    // generate a 4 digit reset password token 
+    const resetToken = crypto.randomInt(1000, 10000).toString();
+    // set token and expiration date 1hour 
+    const resetTokenExpiresAt = Date.now() + 60 * 60 * 1000;
+
+    // save token and expiration time in the user document
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiresAt = new Date(resetTokenExpiresAt);
+    await user.save()
+
+    // send password reset email
+    sendResetPasswordEmail(user.email as string, user.name as string, `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`);
+
+    res.status(200).json({
+      success: "Success",
+      message: "Reset password email sent sucessfully"
+    })
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({ message: "Failed to send password reset email" });
+  }
+}

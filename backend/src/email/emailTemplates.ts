@@ -48,7 +48,7 @@ export const verifyEmailTemplate = (code: string) => `
     </div>
   </body>
 </html> 
-`
+`;
 
 export const welcomeEmailTemplate = (name: string) => `
 <!DOCTYPE html>
@@ -79,6 +79,44 @@ export const welcomeEmailTemplate = (name: string) => `
       <div style="background-color: #F5F3ED; text-align: center; padding: 16px; font-size: 12px; color: #7D5A4F;">
         &copy; ${new Date().getFullYear()} Ogivva. All rights reserved.
       </div>
+    </div>
+  </div>
+</html> 
+`;
+
+export const resetPasswordTemplate = (name: string, resetLink: string) => `
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  </head>
+  <div style="font-family:Arial, sans-serif; background-color:#f7f5f2; padding:40px 20px; color:#3e2c23;">
+    <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+      <div style="background-color: #19BD42; padding: 20px; color: white; text-align: center;">
+        <h1 style="margin: 0;">Reset your Password</h1>
+      </div>
+      <div style="padding: 30px;">
+        <h2 style="color:#5c3d2e;">Hi ${name},</h2>
+        <p style="font-size:16px; line-height:1.6;">
+          We received a request to reset your password. Click the button below to choose a new one:
+        </p>
+        <div style="text-align:center; margin:30px 0;">
+          <a href="${resetLink}" target="_blank" style="background-color: #19BD42; color:white; padding:14px 24px; text-decoration:none; font-weight:bold; border-radius:6px; display:inline-block;">
+            Reset Password
+          </a>
+        </div>
+        <p style="font-size:14px; color:#6c5c49;">
+          If you didn’t request this, you can safely ignore this email.
+        </p>
+        <p style="font-size:14px; margin-top:30px;">
+          Ogivva
+        </p>
+      </div>
+    </div>
+    <div style="text-align:center; font-size:12px; color:#a4978e; margin-top:20px;">
+      &copy; ${new Date().getFullYear()} Ogivva. All rights reserved.
     </div>
   </div>
 </html> 

@@ -7,7 +7,7 @@ import {
   login,
   logout,
   verifyEmail,
-  // forgotPassword,
+  forgotPassword,
   // resetPassword,
   // checkAuth
  } from "../controllers/authController";
@@ -17,7 +17,7 @@ router.post("/signup", signup)
 router.post("/login", login)
 router.post("/logout", logout)
 router.post("/verify-email", verifyEmail)
-// router.get("/forgot-password", forgotPassword)
+router.post("/forgot-password", forgotPassword)
 // router.get("/reset-password", resetPassword)
 
 export default router;
