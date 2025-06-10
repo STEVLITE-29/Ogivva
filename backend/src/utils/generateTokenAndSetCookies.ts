@@ -2,8 +2,6 @@
 
 import jwt from "jsonwebtoken";
 import { Response } from "express";
-// import dotenv from "dotenv";
-// dotenv.config();
 
 // Function to generate a JWT token and set it as a cookie in the response
 export const generateTokenAndSetCookie = (

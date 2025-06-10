@@ -86,3 +86,73 @@ export const verifyEmail = async (req: Request, res: Response): Promise<void> =>
     res.status(500).json({ message: "Email verification failed" });
   }
 }
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+  // destructure email and password from request body 
+  let { email, password } = req.body
+
+  try {
+    // make sure required fields are filled
+    if (!email || !password) {
+      res.status(400).json({message: "Input both email and password"});
+      return; 
+    }
+    // turn email to lowercase and trim
+    email = email.trim().toLowerCase()
+
+    // find user by email
+    const user = await User.findOne({ email })
+    if (!user) {
+      res.status(404).json({message: "User not found"});
+      return;
+    }
+
+    // check if user email is verified
+    if (!user.isVerified) {
+      res.status(409).json({message: "Email not verified, Please verify your email"});
+      return;
+    }
+
+    // compare password with hashed password
+    const isMatch = await bcryptjs.compare(password, user.password)
+    if (!isMatch) {
+      res.status(400).json({message: "Invalid password"});
+      return;
+    }
+
+    //generate JWT and set cookies
+    generateTokenAndSetCookie(user._id as string, res);
+
+    // update last login time and save user
+    user.lastLogin = new Date();
+    await user.save()
+
+    res.status(200).json({
+      success: "Success",
+      message: "Logged in successfully",
+      user: {
+        ...user.toObject(),
+        password: undefined, // Exclude password from response
+      }, 
+    })
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Login Failed" });
+  }
+}
+
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Clear the JWT cookie by setting it to null and expiring it
+    res.clearCookie("token");
+
+    // Respond with a success message
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Logout failed" });
+  }
+};
