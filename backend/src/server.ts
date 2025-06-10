@@ -14,7 +14,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes)
 
 // Environment 
-const port : number = parseInt(process.env.Port || "6001");
+const port : number = parseInt(process.env.Port || "2001");
 const mongo_uri : string = process.env.Mongo_Uri as string;
 
 // MongoDB connection 

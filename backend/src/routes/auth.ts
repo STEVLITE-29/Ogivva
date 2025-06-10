@@ -4,20 +4,20 @@ import express from "express"
 const router = express.Router();
 import { 
   signup,
-  login,
-  logout,
-  verifyEmail,
-  forgotPassword,
-  resetPassword,
-  checkAuth
+  // login,
+  // logout,
+  // verifyEmail,
+  // forgotPassword,
+  // resetPassword,
+  // checkAuth
  } from "../controllers/authController";
 
 // Routes for authentication 
-router.get("/signup", signup)
-router.get("/login", login)
-router.get("/logout", logout)
-router.get("/verify-email", verifyEmail)
-router.get("/forgot-password", forgotPassword)
-router.get("/reset-password", resetPassword)
+router.post("/signup", signup)
+// router.get("/login", login)
+// router.get("/logout", logout)
+// router.get("/verify-email", verifyEmail)
+// router.get("/forgot-password", forgotPassword)
+// router.get("/reset-password", resetPassword)
 
 export default router;
