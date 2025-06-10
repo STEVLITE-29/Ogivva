@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { Request, Response } from "express"
 import User from "../models/User";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookies"
-import { sendVerificationEmail, welcomeEmail, sendResetPasswordEmail } from "../email/sendEmails";
+import { sendVerificationEmail, welcomeEmail, sendResetPasswordEmail, sendResetPasswordSuccessEmail } from "../email/sendEmails";
 
 //signup controller
 export const signup = async (req: Request, res: Response): Promise<void> => {
@@ -189,5 +189,58 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
   } catch (error) {
     console.error("Forgot password error:", error);
     res.status(500).json({ message: "Failed to send password reset email" });
+  }
+}
+
+export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Destructure the request parameters and body
+    const { token } = req.params
+    const { password } = req.body
+
+    // Validate input
+    const user = await User.findOne({ 
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() }
+    })
+
+    // Check if token exists and hasn't expired
+    if(!user) {
+      res.status(400).json({success: false, message: "Invalid request or Expired token"});
+      return;
+    }
+
+    // update the user's password
+    const hashedPassword = await bcryptjs.hash(password, 10)
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiresAt = undefined;
+
+    // save 
+    await user.save();  
+
+    // send reset password success email
+    await sendResetPasswordSuccessEmail(user.email, user.name);
+
+    res.status(200).json({ success: true, message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(500).json({ message: "Failed to reset password" });
+  }
+}
+
+export const checkAuth = async (req: Request, res: Response): Promise<void> => {  
+  try {
+    // Check if user is authenticated
+    const user = await User.findById(req.userId).select("-password")
+    
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({success: true, user})
+  } catch (error) {
+    console.error("Check auth error:", error);
+    res.status(500).json({ success: false, message: "User is not authorized" });
   }
 }

@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { verifyEmailTemplate, welcomeEmailTemplate, resetPasswordTemplate } from "./emailTemplates";
+import { verifyEmailTemplate, welcomeEmailTemplate, resetPasswordTemplate, resetPasswordSuccessEmailTemplate } from "./emailTemplates";
 
 // Define all the email sending functions here
 // Function to send verification email to the user after signup
@@ -90,5 +90,35 @@ export const sendResetPasswordEmail = async (
     console.log("Password reset email sent:", info.response)
   } catch (err) {
     console.error("Error sending password reset email:", err)
+  }
+}
+
+export const sendResetPasswordSuccessEmail = async (
+  email: string,
+  name: string
+): Promise<void> => {
+  // Setup nodemailer transporter using Gmail
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL, // My Email doing the sending
+      pass: process.env.PASS, // App password from environment variable
+    }
+  })
+
+  // Mail options
+  const mailOptions = {
+    from: `"Ogivva" <${process.env.EMAIL}>`,
+    to: email,
+    subject: "Password Reset Successful",
+    html: resetPasswordSuccessEmailTemplate(name),
+  }
+
+  // Send email and catch errors
+  try {
+    const info = await transporter.sendMail(mailOptions)
+    console.log("Password reset success email sent:", info.response)
+  } catch (err) {
+    console.error("Error sending password reset success email:", err)
   }
 }

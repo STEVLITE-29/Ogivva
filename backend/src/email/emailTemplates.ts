@@ -121,3 +121,37 @@ export const resetPasswordTemplate = (name: string, resetLink: string) => `
   </div>
 </html> 
 `;
+
+export const resetPasswordSuccessEmailTemplate = (name: string) => `
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  </head>
+  <div style="font-family:Arial, sans-serif; background-color:#f7f5f2; padding:40px 20px; color:#3e2c23;">
+    <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+      <div style="background-color: #19BD42; padding: 20px; color: white; text-align: center;">
+        <h1 style="margin: 0;">Reset Password Successful</h1>
+      </div>
+      <div style="padding: 30px;">
+        <h2 style="color:#5c3d2e;">Hi ${name},</h2>
+        <p style="font-size:16px; line-height:1.6;">
+          Your password has been successfully reset. You can now log in with your new password.
+        </p>
+        <p style="font-size:14px; color:#6c5c49;">
+          If you didn’t perform this action, please contact our support team immediately.
+        </p>
+        <p style="font-size:14px; margin-top:30px;">
+          Ogivva
+        </p>
+      </div>
+    </div>
+    <div style="text-align:center; font-size:12px; color:#a4978e; margin-top:20px;">
+      &copy; ${new Date().getFullYear()} Ogivva. All rights reserved.
+    </div>
+  </div>
+</html> 
+`
+
