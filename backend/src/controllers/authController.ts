@@ -44,7 +44,14 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     // generate JWT and set cookie
     generateTokenAndSetCookie(user._id as string, res);
 
-    res.status(201).json({success: true, message: "User created, Please check your email to verify your account"})
+    res.status(201).json({
+      success: true, 
+      message: "User created, Please check your email to verify your account", 
+      user: {
+        ...user.toObject(),
+        password: undefined, // Exclude password from response
+      }, 
+    })
   } catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({message: "Failed to signup"});
