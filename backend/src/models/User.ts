@@ -39,7 +39,7 @@ const userSchema = new Schema<IUser> (
         "reciever", 
         "vendor"
       ],
-      default: "reciever",
+      required: true,
     },
     resetPasswordToken: String,
     resetPasswordExpiresAt: Date,

@@ -9,9 +9,9 @@ import { sendVerificationEmail, welcomeEmail, sendResetPasswordEmail, sendResetP
 export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     // destructure all needed field from request body 
-    let { name, email, password } = req.body
+    let { name, email, password, role } = req.body
     // to make sure all needed info are filled and turn email to lowercase
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role) {
       res.status(400).json({message: "All fields are required"});
       return;
     }
@@ -33,6 +33,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       name, 
       email,
       password: hashedPassword,
+      role,
       verificationToken,
       verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     });

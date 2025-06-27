@@ -1,34 +1,31 @@
-import { Routes, Route } from 'react-router-dom'
-import './App.css';
-import OnboardingPage from "./pages/OnboardingPage"
-// import { useEffect } from 'react'
-// import SignUpPage from './pages/SignUpPage'
-// import LoginPage from './pages/LoginPage'
-// import EmailVerificationPage from './pages/EmailVerificationPage'
-// import { Toaster } from 'react-hot-toast'
-// import { useAuthStore } from './store/authStore'
+import { Routes, Route } from "react-router-dom";
+import "./App.css";
+
+import OnboardingPage from "./pages/OnboardingPage";
+import SignUpPage from "./pages/SignUpPage";
+import SignInPage from "./pages/SignInPage"
+import VerifyEmail from "./pages/VerifyEmail";
+import EmailVerified from "./pages/EmailVerified";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import PasswordResetSuccessful from "./pages/PasswordResetSuccessful";
 
 function App() {
-  // const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore()
-
-  // useEffect(() => {
-  //   checkAuth?.()
-  // },[checkAuth])
-
-  // console.log('isAuthenticated', isAuthenticated);; // R
-  // console.log("user", user)
-
   return (
-    <div className=" min-h-screen bg-ivory-100 flex items-center justify-center">
+    <div className="min-h-screen bg-white flex items-center justify-center">
       <Routes>
-        <Route path="/" element={<OnboardingPage />} />
-        {/* <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/verify-email" element={<EmailVerificationPage />} /> */}
+        <Route path="/" element={<div>Welcome to GIVVA</div>} />
+        <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/email-verified" element={<EmailVerified />} />
+        <Route path="/signin" element={<SignInPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password-successful" element={<PasswordResetSuccessful />} />
       </Routes>
-      {/* <Toaster /> */}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

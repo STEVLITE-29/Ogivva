@@ -17,16 +17,16 @@ const PhotoSlide: React.FC = () => {
   };
 
   return (
-    <div className="relative rounded-xl w-full">
+    <div className="relative w-full">
       {/* Image */}
       <img
         src={images[currentIndex]}
         alt={`Slide ${currentIndex + 1}`}
-        className="w-full h-auto max-h-[500px] object-cover transition-all duration-300"
+        className="w-full h-auto max-h-[550px] object-cover transition-all duration-300 rounded-2xl"
       />
 
       {/* Arrows and Pagination */}
-      <div className="flex justify-between items-center absolute bottom-[48px] left-[50px] w-[80%]">
+      <div className="flex justify-between items-center absolute bottom-[38px] left-[75px] w-[80%]">
         {/* Pagination Dots */}
         <div className="flex space-x-2">
           {images.map((_, i) => (
