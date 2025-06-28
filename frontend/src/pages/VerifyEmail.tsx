@@ -7,7 +7,7 @@ import { useAuthStore } from "../stores/authStore";
 import GivvaIcon from "../images/GIVVAIcon.svg";
 import PhotoSlide from "../components/PhotoSlide";
 
-const VerifyEmail = () => {
+export default function VerifyEmail() {
   const [code, setCode] = useState<string[]>(["", "", "", ""]);
   const [resendCooldown, setResendCooldown] = useState(60);
   const [isCooldownActive, setIsCooldownActive] = useState(true);
@@ -17,12 +17,10 @@ const VerifyEmail = () => {
 
   const { user, error, isLoading, verifyEmail } = useAuthStore();
 
-  // Auto-focus the first input
   useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
 
-  // Handle countdown
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
 
@@ -35,7 +33,6 @@ const VerifyEmail = () => {
     return () => clearTimeout(timer);
   }, [resendCooldown, isCooldownActive]);
 
-  // Input change handler
   const handleChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return;
 
@@ -91,7 +88,11 @@ const VerifyEmail = () => {
     toast.success("Code resent to your email.");
     setResendCooldown(60);
     setIsCooldownActive(true);
-    // Optionally call your backend to resend the code here.
+    // TODO: call your backend resend endpoint here.
+  };
+
+  const handleChangeEmail = () => {
+    navigate("/signup");
   };
 
   return (
@@ -105,9 +106,8 @@ const VerifyEmail = () => {
             We’ve sent a 4-digit code to <strong>{user?.email}</strong>
           </p>
         </div>
- 
+
         <div className="w-full max-w-md mx-auto mt-7 border border-[#E7EAEE] p-6 rounded-md bg-white flex flex-col items-center justify-center gap-4">
-          {/* Timer */}
           <p className="text-xs text-gray-500 text-center">
             You can resend a new code in{" "}
             <span className="font-semibold text-gray-700">
@@ -117,9 +117,7 @@ const VerifyEmail = () => {
             </span>.
           </p>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="w-full flex flex-col items-center gap-4">
-            {/* Input boxes */}
             <div className="flex justify-center gap-3">
               {code.map((digit, index) => (
                 <input
@@ -137,10 +135,8 @@ const VerifyEmail = () => {
               ))}
             </div>
 
-            {/* Error */}
             {error && <p className="text-red-500 text-xs">{error}</p>}
 
-            {/* Submit button */}
             <motion.button
               type="submit"
               className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md font-medium text-sm transition"
@@ -151,7 +147,6 @@ const VerifyEmail = () => {
               {isLoading ? <Loader className="animate-spin w-5 h-5 mx-auto" /> : "Verify Code"}
             </motion.button>
 
-            {/* Resend Code Button */}
             <button
               type="button"
               className={`text-sm font-semibold ${
@@ -163,16 +158,17 @@ const VerifyEmail = () => {
               Resend Code
             </button>
 
-            {/* Change Email Link */}
-            <button type="button" className="text-sm text-gray-500 underline">
+            <button
+              type="button"
+              onClick={handleChangeEmail}
+              className="text-sm text-gray-500 underline"
+            >
               Change Email Address
             </button>
           </form>
         </div>
-
       </div>
 
-      {/* Right panel */}
       <div className="flex-grow h-full rounded-2xl overflow-hidden">
         <PhotoSlide />
       </div>
@@ -180,4 +176,3 @@ const VerifyEmail = () => {
   );
 };
 
-export default VerifyEmail;

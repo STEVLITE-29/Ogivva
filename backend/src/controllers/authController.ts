@@ -96,53 +96,47 @@ export const verifyEmail = async (req: Request, res: Response): Promise<void> =>
 }
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  // destructure email and password from request body 
-  let { email, password } = req.body
+  let { email, password, rememberMe } = req.body;
 
   try {
-    // make sure required fields are filled
     if (!email || !password) {
-      res.status(400).json({message: "Input both email and password"});
-      return; 
+      res.status(400).json({ message: "Input both email and password" });
+      return;
     }
-    // turn email to lowercase and trim
-    email = email.trim().toLowerCase()
+    email = email.trim().toLowerCase();
 
-    // find user by email
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     if (!user) {
-      res.status(404).json({message: "User not found"});
+      res.status(404).json({ message: "User not found" });
       return;
     }
 
-    // check if user email is verified
     if (!user.isVerified) {
-      res.status(409).json({message: "Email not verified, Please verify your email"});
+      res.status(409).json({ message: "Email not verified, Please verify your email" });
       return;
     }
 
-    // compare password with hashed password
-    const isMatch = await bcryptjs.compare(password, user.password)
+    const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) {
-      res.status(400).json({message: "Invalid password"});
+      res.status(400).json({ message: "Invalid password" });
       return;
     }
 
-    //generate JWT and set cookies
-    generateTokenAndSetCookie(user._id as string, res);
+    const maxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : undefined; 
+    
+    generateTokenAndSetCookie(user._id as string, res, maxAge);
 
-    // update last login time and save user
     user.lastLogin = new Date();
-    await user.save()
+    await user.save();
 
     res.status(200).json({
       success: "Success",
       message: "Logged in successfully",
       user: {
         ...user.toObject(),
-        password: undefined, // Exclude password from response
-      }, 
-    })
+        password: undefined,
+      },
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Login Failed" });
@@ -167,9 +161,15 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
 
 export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
   // destructure email from request body
-  const { email } = req.body;
+  let { email } = req.body;
 
   try {
+    if (!email) {
+      res.status(400).json({ message: "Input email field" });
+      return;
+    }
+    email = email.trim().toLowerCase()
+
     // find user by email
     const user = await User.findOne({ email });
     if (!user) {
@@ -188,7 +188,7 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
     await user.save()
 
     // send password reset email
-    sendResetPasswordEmail(user.email as string, user.name as string, `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`);
+    sendResetPasswordEmail(user.email as string, user.name as string, `${process.env.CLIENT_URL}/reset-password/${resetToken}`);
 
     res.status(200).json({
       success: "Success",

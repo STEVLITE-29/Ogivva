@@ -3,14 +3,33 @@ import "./App.css";
 
 import OnboardingPage from "./pages/OnboardingPage";
 import SignUpPage from "./pages/SignUpPage";
-import SignInPage from "./pages/SignInPage"
+import SignInPage from "./pages/SignInPage";
 import VerifyEmail from "./pages/VerifyEmail";
 import EmailVerified from "./pages/EmailVerified";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import PasswordResetSuccessful from "./pages/PasswordResetSuccessful";
+import { useAuthStore } from "./stores/authStore";
+import { useEffect } from "react";
 
 function App() {
+  const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-500 text-sm">Checking authentication...</p>
+      </div>
+    );
+  }
+
+  console.log("isAuthenticated:", isAuthenticated);
+  console.log("user:", user);
+
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
       <Routes>
@@ -21,7 +40,7 @@ function App() {
         <Route path="/email-verified" element={<EmailVerified />} />
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/reset-password-successful" element={<PasswordResetSuccessful />} />
       </Routes>
     </div>

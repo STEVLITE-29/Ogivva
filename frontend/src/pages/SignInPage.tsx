@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 
 export default function SignInPage() {
   const navigate = useNavigate();
-  const { isLoading } = useAuthStore();
+  const { isLoading, error } = useAuthStore();
 
   // Local state
   const [email, setEmail] = useState("");
@@ -19,12 +19,18 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Form submit handler
+  const { login } = useAuthStore();
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement your actual sign-in logic here
-    toast.success("Logged in successfully!");
-    navigate("/");
+
+    try {
+      await login(email, password, rememberMe);
+      toast.success("Logged in successfully!");
+      navigate("/");
+    } catch (err) {
+      toast.error("Login failed. Check your credentials.");
+      console.error("Login error:", err);
+    }
   };
 
   return (
@@ -120,36 +126,31 @@ export default function SignInPage() {
             )}
           </motion.button>
 
+          {error && (
+            <p className="text-red-500 text-xs font-semibold mt-[2px]">{error}</p>
+          )}
+
           <div className="flex items-center gap-2 my-3">
             <hr className="flex-grow border-t border-gray-200" />
             <span className="text-xs text-gray-400">or</span>
             <hr className="flex-grow border-t border-gray-200" />
           </div>
 
-          <button
-            type="button"
+          <a
+            href="http://localhost:2000/api/auth/google"
             className="w-full border border-gray-300 flex items-center justify-center gap-2 py-2 rounded-md text-sm hover:bg-gray-50"
-            onClick={() => toast("Google login clicked")}
           >
-            <img
-              src={GoogleIcon}
-              alt="Google icon"
-              className="w-4 h-4"
-            />
+            <img src={GoogleIcon} alt="Google icon" className="w-4 h-4" />
             Continue with Google
-          </button>
-          <button
-            type="button"
+          </a>
+
+          <a
+            href="http://localhost:2000/api/auth/facebook"
             className="w-full border border-gray-300 flex items-center justify-center gap-2 py-2 rounded-md text-sm hover:bg-gray-50"
-            onClick={() => toast("Facebook login clicked")}
           >
-            <img
-              src={FacebookIcon}
-              alt="Facebook icon"
-              className="w-4 h-4"
-            />
+            <img src={FacebookIcon} alt="Facebook icon" className="w-4 h-4" />
             Continue with Facebook
-          </button>
+          </a>
         </form>
       </div>
 
