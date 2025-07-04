@@ -37,13 +37,13 @@ app.use(passport.session());
 app.use("/api/auth", authRoutes)
 
 // Environment 
-const port : number = parseInt(process.env.Port || "2001");
-const mongo_uri : string = process.env.Mongo_URI as string;
+const port : number = parseInt(process.env.PORT || "2001");
+const mongo_uri : string = process.env.MONGO_URI as string;
 
 // MongoDB connection 
 const connectDB = async () => {
     try {
-        await mongoose.connect(mongo_uri, {dbName: "Auth"})
+        await mongoose.connect(mongo_uri, {dbName: "Givva"})
         console.log("connected to database")
     } catch (error) {
         console.error("Failed to connect to database")

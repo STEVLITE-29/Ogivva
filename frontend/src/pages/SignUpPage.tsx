@@ -49,9 +49,9 @@ export default function Signup() {
   };
 
   return (
-    <main className="flex w-screen bg-white p-4 h-screen overflow-hidden">
+    <main className="flex w-screen bg-white p-4 h-screen">
       {/* Left panel */}
-      <div className="w-[40%] px-8 py-5 flex flex-col">
+      <div className="w-[40%] px-8 py-5 flex flex-col overflow-y-auto scrollbar-hidden">
         <div>
           <img src={GivvaIcon} alt="Givva Logo" className="mb-5 w-20 mx-auto" />
           <h1 className="text-xl font-semibold text-[#191D23] mb-1">
@@ -185,7 +185,6 @@ export default function Signup() {
 
         {/* Social buttons */}
         <AnimatePresence>
-          {password.length === 0 && (
             <motion.div
               key="social-buttons"
               className="flex flex-col gap-2 mt-2 mb-3"
@@ -214,11 +213,9 @@ export default function Signup() {
                 Sign up with Facebook
               </a>
             </motion.div>
-          )}
         </AnimatePresence>
       </div>
 
-      {/* Right panel */}
       <div className="flex-grow h-full rounded-2xl overflow-hidden">
         <PhotoSlide />
       </div>
