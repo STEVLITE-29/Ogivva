@@ -1,11 +1,27 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { UserRole } from "../types/user";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface IUser extends Document {
   name: string ;
   email: string ;
   password: string ;
-  role?: UserRole ;
+  addresses: {
+    label: string;
+    name: string; 
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+    phone: string;
+    isDefault: boolean;
+  }[];
+  role?: "gifter" | "receiver" | "vendor";
+  profileImage?: string;
+  walletBalance: number;
+  paymentMethods: Types.ObjectId[];
+  settings: {
+    defaultAnonymous: boolean;
+  };
   resetPasswordToken?: string;
   resetPasswordExpiresAt?: Date;
   verificationToken?: string;
@@ -32,6 +48,19 @@ const userSchema = new Schema<IUser> (
       type: String,
       required: true,
     }, 
+    addresses: [
+      {
+        label: { type: String },
+        name: { type: String },
+        street: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String },
+        zip: { type: String, required: true },
+        country: { type: String, required: true },
+        phone: { type: String },
+        isDefault: { type: Boolean, default: false }
+      }
+    ],
     role: {
       type: String,
       enum: [
@@ -40,6 +69,25 @@ const userSchema = new Schema<IUser> (
         "vendor"
       ],
       required: true,
+    },
+    profileImage: { 
+      type: String 
+    },
+    walletBalance: { 
+      type: Number,
+       default: 0 
+    },
+    paymentMethods: [
+      { 
+        type: Schema.Types.ObjectId, 
+        ref: "PaymentMethod" 
+      }
+    ],
+    settings: {
+      defaultAnonymous: { 
+        type: Boolean, 
+        default: false 
+      }
     },
     resetPasswordToken: String,
     resetPasswordExpiresAt: Date,
