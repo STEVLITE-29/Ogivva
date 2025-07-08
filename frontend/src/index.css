@@ -8,3 +8,16 @@
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;            
 }
+
+.text-2xs {
+  font-size: 10px;
+}
+
+.plus-jakarta-sans {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* styles.css */
+.bg-soft-green-gradient {
+  background: linear-gradient(90deg, hsla(135, 82%, 87%, 1) 0%, hsla(136, 100%, 97%, 1) 31%, hsla(69, 100%, 95%, 1) 68%, hsla(135, 95%, 93%, 1) 100%);
+}

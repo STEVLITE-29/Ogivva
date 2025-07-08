@@ -11,6 +11,7 @@ import ResetPassword from "./pages/ResetPassword";
 import PasswordResetSuccessful from "./pages/PasswordResetSuccessful";
 import { useAuthStore } from "./stores/authStore";
 import { useEffect } from "react";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore();
@@ -31,9 +32,10 @@ function App() {
   console.log("user:", user);
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
+    <div className="min-h-screen bg-white plus-jakarta-sans">
       <Routes>
-        <Route path="/" element={<div>Welcome to GIVVA</div>} />
+        <Route path="/" element={<div>Landing Page</div>} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
